@@ -20,3 +20,19 @@ Execute the following command to run the application:
 ```
 sudo ./beep
 ```
+
+#### Star Wars
+
+Implementation of the Imperial March from Star Wars.
+
+Install [wiringPi](http://wiringpi.com/download-and-install/) and after that execute the following command to build the application:
+
+```
+cd buzzer/c/
+gcc starwars.c -o starwars -lwiringPi -std=c99
+```
+
+Execute the following command to play the Imperial March:
+```
+sudo ./starwars
+```
