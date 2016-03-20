@@ -3,6 +3,8 @@ Raspberry Pi examples
 
 ## Buzzer
 
+Video: https://www.youtube.com/watch?v=j8HnKM58QXk
+
 ### C
 
 #### Beer
