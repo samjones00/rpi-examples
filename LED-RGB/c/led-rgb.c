@@ -2,20 +2,20 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-// Red: GPIO 0, aka pin 11
-const int pinRed = 0;
-// Red: GPIO 2, aka pin 13
-const int pinGreen = 2;
-// Red: GPIO 3, aka pin 15
-const int pinBlue = 3; 
+// Red: GPIO 7, aka pin 7
+const int pinRed = 7;
+// Green: GPIO 0, aka pin 11
+const int pinGreen = 0;
+// Blue: GPIO 2, aka pin 13
+const int pinBlue = 2;
 
 void color(int colorRed, int colorGreen, int colorBlue) 
 {
-	digitalWrite(pinRed, colorRed);
-	digitalWrite(pinGreen, colorGreen);
-	digitalWrite(pinBlue, colorBlue);
-	//Wait for 1 second
-	delay(1000);
+  digitalWrite(pinRed, colorRed);
+  digitalWrite(pinGreen, colorGreen);
+  digitalWrite(pinBlue, colorBlue);
+  //Wait for 1 second
+  delay(1000);
 }
 
 int main()
@@ -39,6 +39,6 @@ int main()
     color(0, 1, 0);
     //Blue
     color(0, 0, 1);	
-   }
-   return 0;
+  }
+  return 0;
 }
