@@ -56,7 +56,7 @@ int main (void)
 
   printf("%5.2fC\n", cTemp(temp));
 
-  // Yoomidity
+  // Humidity
 
   wiringPiI2CWrite(fd, 0xF5);
   delay(100);
