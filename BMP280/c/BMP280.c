@@ -3,6 +3,7 @@
 #include <string.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #include "wiringPi.h"
 #include "wiringPiI2C.h"
@@ -89,6 +90,35 @@ float read_temperature(int fd)
   return (float)((compensated_temp * 5 + 128) >> 8) / 100;
 }
 
+float read_pressure(int fd)
+{
+  int raw_temp = read_raw(fd, BMP280_TEMPDATA);
+  int compensated_temp = compensate_temp(raw_temp);
+  int raw_pressure = read_raw(fd, BMP280_PRESSUREDATA);
+
+  int64_t p1 = compensated_temp - 128000;
+  int64_t p2 = p1 * p1 * (int64_t)cal_p6;
+  int64_t buf = (p1 * (int64_t)cal_p5);
+  p2 += buf << 17;
+  p2 += (int64_t)cal_p4 << 35;
+  p1 = ((p1 * p1 * cal_p3) >> 8) + ((p1 * cal_p2) << 12);
+  p1 = (((int64_t)1 << 47) + p1) * ((int64_t)cal_p1) >> 33;
+
+  // Avoid exception caused by division by zero
+  if (0 == p1)
+  {
+    return 0;
+  }
+
+  int64_t p = 1048576 - raw_pressure;
+  p = (((p << 31) - p2) * 3125) / p1;
+  p1 = ((int64_t)cal_p9 * (p >> 13) * (p >> 13)) >> 25;
+  p2 = ((int64_t)cal_p8 * p) >> 19;
+  p = ((p + p1 + p2) >> 8) + (((int64_t)cal_p7) << 4);
+
+  return (float)(p / 256);
+}
+
 int main (void)
 {
   int fd = 0;
@@ -109,7 +139,8 @@ int main (void)
   load_calibration(fd);
   wiringPiI2CWriteReg8(fd, BMP280_CONTROL, 0x3F);
 
-  printf("%5.2fC\n", read_temperature(fd));
+  printf("%5.2f C\n", read_temperature(fd));
+  printf("%5.2f hPa\n", read_pressure(fd)/100);
 
   return 0;
 }
