@@ -1,13 +1,23 @@
 # rpi-examples
 Raspberry Pi examples
 
-## Buzzer
+# Videos
 
-Video: https://www.youtube.com/watch?v=j8HnKM58QXk
+Buzzer: https://www.youtube.com/watch?v=j8HnKM58QXk
+LM75A: https://www.youtube.com/watch?v=pyg27uj0Xns
+HTU21D: https://www.youtube.com/watch?v=A_yruJtYUwE
+
+# Notes
+
+If you are interested in running any of the examples for I2C written in C/C++ as a regular user (not root) perform the following steps:
+* Remove line "wiringPiSetup();" in "HTU21D_test.c"
+* Add your user in "i2c" group
+
+## Buzzer
 
 ### C
 
-#### Beer
+#### Beep
 
 Simple application to test if a piezo buzzer attached to pin 11 is working.
 
