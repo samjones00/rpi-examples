@@ -3,9 +3,9 @@ Raspberry Pi examples
 
 # Videos
 
-Buzzer: https://www.youtube.com/watch?v=j8HnKM58QXk
-LM75A: https://www.youtube.com/watch?v=pyg27uj0Xns
-HTU21D: https://www.youtube.com/watch?v=A_yruJtYUwE
+* Buzzer: https://www.youtube.com/watch?v=j8HnKM58QXk
+* LM75A: https://www.youtube.com/watch?v=pyg27uj0Xns
+* HTU21D: https://www.youtube.com/watch?v=A_yruJtYUwE
 
 # Notes
 
