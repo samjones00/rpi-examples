@@ -44,22 +44,24 @@ int main()
   // Set pin mode
   pinMode(motor1pin1, OUTPUT);
   pinMode(motor1pin2, OUTPUT);
+  pinMode(motor2pin1, OUTPUT);
+  pinMode(motor2pin2, OUTPUT);
 
   close();
 
   printf("Moving forward\n");
 
-  motor1(LOW, HIGH);
-  motor2(LOW, HIGH);
-
-  sleep(3);
-
-  printf("Moving backward\n");
-
   motor1(HIGH, LOW);
   motor2(HIGH, LOW);
 
-  sleep(3);
+  sleep(1);
+
+  printf("Moving backward\n");
+
+  motor1(LOW, HIGH);
+  motor2(LOW, HIGH);
+
+  sleep(1);
 
   close();
 
