@@ -2,6 +2,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <signal.h>
+#include <softPwm.h>
+
+const int speedMax = 100;
 
 // Motor 1 1st: GPIO 0, aka pin 11
 const int motor1pin1 = 0;
@@ -47,6 +50,18 @@ int main()
   pinMode(motor2pin1, OUTPUT);
   pinMode(motor2pin2, OUTPUT);
 
+  //Software PWM
+  if (0 == softPwmCreate(motor1pin1, 0, speedMax))
+  {
+    printf("softPwmCreate ok for motor 1\n");
+  }
+  if (0 == softPwmCreate(motor2pin1, 0, speedMax))
+  {
+    printf("softPwmCreate ok for motor 2\n");
+  }
+  softPwmWrite(motor1pin1, 30);
+  softPwmWrite(motor2pin1, 30);
+
   close();
 
   printf("Moving forward\n");
@@ -54,14 +69,14 @@ int main()
   motor1(HIGH, LOW);
   motor2(HIGH, LOW);
 
-  sleep(1);
+  sleep(3);
 
-  printf("Moving backward\n");
+  /*printf("Moving backward\n");
 
   motor1(LOW, HIGH);
   motor2(LOW, HIGH);
 
-  sleep(1);
+  sleep(1);*/
 
   close();
 
