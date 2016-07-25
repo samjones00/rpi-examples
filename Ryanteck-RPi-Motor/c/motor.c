@@ -4,7 +4,7 @@
 #include <signal.h>
 #include <softPwm.h>
 
-const int speedMax = 100;
+const int speedMax = 200;
 
 // Motor 1 1st: GPIO 0, aka pin 11
 const int motor1pin1 = 0;
@@ -28,10 +28,22 @@ void motor2(int pin1, int pin2)
   digitalWrite(motor2pin2, pin2);
 }
 
-void close()
+void brake()
 {
+  softPwmWrite(motor1pin1, 0);
+  softPwmWrite(motor1pin2, 0);
+  softPwmWrite(motor2pin1, 0);
+  softPwmWrite(motor2pin2, 0);
   motor1(LOW, LOW);
   motor2(LOW, LOW);
+}
+
+void enablePWM(pin, speed)
+{
+  if (0 != softPwmCreate(pin, 0, speed))
+  {
+    printf("ERROR: Cannot enable software PWM for pin %d", pin);
+  }
 }
 
 int main()
@@ -42,7 +54,7 @@ int main()
     return 1;
   }
 
-  signal(SIGINT, close);
+  signal(SIGINT, brake);
 
   // Set pin mode
   pinMode(motor1pin1, OUTPUT);
@@ -51,34 +63,39 @@ int main()
   pinMode(motor2pin2, OUTPUT);
 
   //Software PWM
-  if (0 == softPwmCreate(motor1pin1, 0, speedMax))
-  {
-    printf("softPwmCreate ok for motor 1\n");
-  }
-  if (0 == softPwmCreate(motor2pin1, 0, speedMax))
-  {
-    printf("softPwmCreate ok for motor 2\n");
-  }
-  softPwmWrite(motor1pin1, 30);
-  softPwmWrite(motor2pin1, 30);
+  enablePWM(motor1pin1, speedMax);
+  enablePWM(motor1pin2, speedMax);
+  enablePWM(motor2pin1, speedMax);
+  enablePWM(motor2pin2, speedMax);
 
-  close();
+  brake();
 
   printf("Moving forward\n");
+
+  softPwmWrite(motor1pin1, 90);
+  softPwmWrite(motor2pin1, 90);
 
   motor1(HIGH, LOW);
   motor2(HIGH, LOW);
 
   sleep(3);
 
-  /*printf("Moving backward\n");
+  printf("Stop\n");
+
+  brake();
+  sleep(5);
+
+  printf("Moving backward\n");
+
+  softPwmWrite(motor1pin2, 70);
+  softPwmWrite(motor2pin2, 70);
 
   motor1(LOW, HIGH);
   motor2(LOW, HIGH);
 
-  sleep(1);*/
+  sleep(3);
 
-  close();
+  brake();
 
   return 0;
 }
