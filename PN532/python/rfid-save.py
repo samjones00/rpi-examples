@@ -29,6 +29,8 @@ SCLK = 25
 # different key associated with it.
 CARD_KEY = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
 
+# Prefix, aka header from the card
+HEADER = b'BG'
 
 # Create and initialize an instance of the PN532 class.
 pn532 = PN532.PN532(cs=CS, sclk=SCLK, mosi=MOSI, miso=MISO)
@@ -62,8 +64,8 @@ while block_choice is None:
     except ValueError:
         print('Error! Unrecognized option.')
         continue
-    # Unsigned int in 4 bytes (32 bits)
-    if not (0 <= block_choice < 4294967295):
+    # Decimal value not greater than hex number with 6 digits
+    if not (0 <= block_choice < 16777215):
         print('Error! User ID must be within 0 to 4294967295.')
         continue
     print('')
@@ -88,16 +90,16 @@ if not pn532.mifare_classic_authenticate_block(uid, 4, PN532.MIFARE_CMD_AUTH_B,
     sys.exit(-1)
 # Next build the data to write to the card.
 # Format is as follows:
-# - Bytes 0-4 are a header with ASCII value 'TEST'
-# - Bytes 4-7 is the user data, for example an unsigned int with user ID
+# - 2 bytes 0-1 store a header with ASCII value, for example 'BG'
+# - 6 bytes 2-7 store the user data, for example user ID
 data = bytearray(16)
-# Add header 'TEST'
-data[0:4] = b'TEST'
-# Convert int to 4 bytes hex (with prefix 0 if shorter)
-value = str(block_choice)
-while (4 > len(value)):
+# Add header
+data[0:2] = HEADER
+# Convert int to hex string with up to 6 digits
+value = format(block_choice, 'x')
+while (6 > len(value)):
     value = '0' + value
-data[4:8] = value
+data[2:8] = value
 # Finally write the card.
 if not pn532.mifare_classic_write_block(4, data):
     print('Error! Failed to write to the card.')

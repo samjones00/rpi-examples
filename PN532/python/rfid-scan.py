@@ -28,7 +28,7 @@ CARD_KEY = [0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF]
 DELAY = 0.5
 
 # Prefix, aka header from the card
-HEADER = 'TEST'
+HEADER = b'BG'
 
 def close(signal, frame):
         sys.exit(0)
@@ -60,9 +60,9 @@ while True:
         print('Failed to read data from card!')
         continue
     # Check the header
-    if data[0:4] !=  HEADER:
+    if data[0:2] !=  HEADER:
         print('Card is not written with proper block data!')
         continue
     # Parse out the block type and subtype
-    print('User Id: {0}'.format(int(data[4:8])))
+    print('User Id: {0}'.format(int(data[2:8].decode("utf-8"), 16)))
     time.sleep(DELAY);
