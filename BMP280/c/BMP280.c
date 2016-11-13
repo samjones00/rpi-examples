@@ -74,7 +74,7 @@ int read_raw(int fd, int reg)
   return raw;
 }
 
-int compensate_temp(int raw_temp)
+int32_t compensate_temp(int raw_temp)
 {
   int t1 = (((raw_temp >> 3) - (cal_t1 << 1)) * (cal_t2)) >> 11;
   int t2 = (((((raw_temp >> 4) - (cal_t1)) *
@@ -90,15 +90,15 @@ float read_temperature(int fd)
   return (float)((compensated_temp * 5 + 128) >> 8) / 100;
 }
 
-float read_pressure(int fd)
+double read_pressure(int fd)
 {
   int raw_temp = read_raw(fd, BMP280_TEMPDATA);
-  int compensated_temp = compensate_temp(raw_temp);
+  int32_t compensated_temp = compensate_temp(raw_temp);
   int raw_pressure = read_raw(fd, BMP280_PRESSUREDATA);
 
-  int64_t p1 = compensated_temp - 128000;
-  int64_t p2 = p1 * p1 * (int64_t)cal_p6;
-  int64_t buf = (p1 * (int64_t)cal_p5);
+  int64_t p1 = compensated_temp/2 - 64000;
+  int64_t p2 = p1 * p1 * (int64_t)cal_p6/32768;
+  int64_t buf = (p1 * (int64_t)cal_p5*2);
   p2 += buf << 17;
   p2 += (int64_t)cal_p4 << 35;
   p1 = ((p1 * p1 * cal_p3) >> 8) + ((p1 * cal_p2) << 12);
@@ -116,7 +116,7 @@ float read_pressure(int fd)
   p2 = ((int64_t)cal_p8 * p) >> 19;
   p = ((p + p1 + p2) >> 8) + (((int64_t)cal_p7) << 4);
 
-  return (float)(p / 256);
+  return (double)(p / 256);
 }
 
 int main (void)
