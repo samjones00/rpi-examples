@@ -1,2 +1,3 @@
-led-strip-smd3528
+led-blink
+led-pwm
 *.o
