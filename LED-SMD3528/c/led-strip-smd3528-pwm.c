@@ -9,7 +9,7 @@ const int pinCtrl = 0;
 
 void close()
 {
-	digitalWrite(pinCtrl, 0);
+	softPwmWrite(pinCtrl, 0);
 	exit(0);
 }
 
@@ -17,12 +17,13 @@ void enablePWM(int pin, int speed)
 {
 	if (0 != softPwmCreate(pin, 0, speed))
 	{
-		printf("ERROR: Cannot enable software PWM for pin %d", pin);
+		printf("ERROR: Cannot enable software PWM for pin %d\n", pin);
 	}
 }
 
 int main()
 {
+	// Process Ctrl+C to terminate the application
 	signal(SIGINT, close);
 
 	if (-1 == wiringPiSetup())
@@ -31,19 +32,27 @@ int main()
 		return 1;
 	}
 
-	// Set pin mode
-	pinMode(pinCtrl, OUTPUT);
-	enablePWM(pinCtrl, 255);
+	// Enable PWM and set max value
+	enablePWM(pinCtrl, 5);
 
-	digitalWrite(pinCtrl, 1);
+	// Infinite loop
 	for(;;) 
 	{
-		softPwmWrite(pinCtrl, 255);
-		//digitalWrite(pinCtrl, 1);
-		delay(1000);
-		softPwmWrite(pinCtrl, 10);
-		//digitalWrite(pinCtrl, 0);
-		delay(1000);
+		// Increase brightness from 20% to 100%
+		for (int fadeIn=1; fadeIn<6;fadeIn++)
+		{
+			printf("Brightness: %d%\n", fadeIn*20);
+			softPwmWrite(pinCtrl, fadeIn);
+			delay(3000);
+		}
+
+		// Decrease brightness from 80% to 40%
+		for (int fadeOut=4; fadeOut>1; fadeOut--)
+		{
+			printf("Brightness: %d%\n", fadeOut*20);
+			softPwmWrite(pinCtrl, fadeOut);
+			delay(3000);
+		}
 	}
 	return 0;
 }
