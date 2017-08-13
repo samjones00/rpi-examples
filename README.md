@@ -85,6 +85,17 @@ make
 ./TSL2561_test
 ```
 
+## MAX44009 Ambient Light Sensor Module
+
+Build and run the source code
+```
+cd MAX44009/c/
+make
+./MAX44009_test
+```
+
+The example written in the C programming language has been cotributed by Pixel_K.
+
 ## PN532 NFC Module
 
 * Install Adafruit Python PN532:
