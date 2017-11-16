@@ -1,5 +1,5 @@
 CC=gcc
-CFLAGS=-I.
+CFLAGS=-I. -Wall
 DEPS = 
 OBJ = HTU21D.o HTU21D_test.o
 EXTRA_LIBS=-lwiringPi
